@@ -24,7 +24,7 @@
     </style>
 
     <!--Rating Dialog-->
-    <!--<style name="RatingDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="RatingDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:background">@android:color/white</item>
         <item name="android:buttonBarPositiveButtonStyle">@style/RatingDialogButtonStyle</item>
         <item name="android:buttonBarNegativeButtonStyle">@style/RatingDialogButtonStyle</item>
@@ -38,6 +38,6 @@
     <style name="RatingDialogFadeAnim">
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
-    </style>-->
+    </style>
 
 </resources>
