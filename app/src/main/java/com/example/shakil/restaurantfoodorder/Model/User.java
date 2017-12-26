@@ -34,7 +34,7 @@ public class User {
     }
 
     public void setIsStaff(String isStaff) {
-        IsStaff = isStaff;
+        this.IsStaff = isStaff;
     }
 
     public String getPhone() {
@@ -42,7 +42,7 @@ public class User {
     }
 
     public void setPhone(String phone) {
-        Phone = phone;
+        this.Phone = phone;
     }
 
     public String getName() {
@@ -50,7 +50,7 @@ public class User {
     }
 
     public void setName(String name) {
-        Name = name;
+        name = name;
     }
 
     public String getPassword() {
@@ -58,6 +58,6 @@ public class User {
     }
 
     public void setPassword(String password) {
-        Password = password;
+        this.Password = password;
     }
 }
