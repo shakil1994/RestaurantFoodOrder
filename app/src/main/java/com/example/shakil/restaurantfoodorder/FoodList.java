@@ -20,6 +20,7 @@ import com.example.shakil.restaurantfoodorder.Common.Common;
 import com.example.shakil.restaurantfoodorder.Database.Database;
 import com.example.shakil.restaurantfoodorder.Interface.ItemClickListener;
 import com.example.shakil.restaurantfoodorder.Model.Food;
+import com.example.shakil.restaurantfoodorder.Model.Order;
 import com.example.shakil.restaurantfoodorder.ViewHolder.FoodViewHolder;
 import com.facebook.CallbackManager;
 import com.facebook.share.model.SharePhoto;
@@ -224,6 +225,17 @@ public class FoodList extends AppCompatActivity {
         });
 
 
+
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (adapter != null){
+            adapter.startListening();
+        }
     }
 
     private void startSearch(CharSequence text) {
@@ -287,7 +299,6 @@ public class FoodList extends AppCompatActivity {
         //Create Options with query
         FirebaseRecyclerOptions<Food> foodOptions = new FirebaseRecyclerOptions.Builder<Food>().setQuery(searchByName, Food.class).build();
 
-
         adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(foodOptions) {
             @Override
             protected void onBindViewHolder(@NonNull final FoodViewHolder viewHolder, final int position, @NonNull final Food model) {
@@ -296,6 +307,17 @@ public class FoodList extends AppCompatActivity {
                 viewHolder.food_price.setText(String.format("$ %s", model.getPrice().toString()));
 
                 Picasso.with(getBaseContext()).load(model.getImage()).into(viewHolder.food_image);
+
+                //Quick Cart
+                viewHolder.quick_cart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new Database(getBaseContext()).addToCart(new Order(adapter.getRef(position).getKey(), model.getName(),
+                                "1", model.getPrice(), model.getDiscount()));
+
+                        Toast.makeText(FoodList.this, "Added to Cart", Toast.LENGTH_LONG).show();
+                    }
+                });
 
 
                 //Add Favorites

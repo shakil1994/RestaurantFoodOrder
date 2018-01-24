@@ -10,6 +10,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andremion.counterfab.CounterFab;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.shakil.restaurantfoodorder.Common.Common;
 import com.example.shakil.restaurantfoodorder.Database.Database;
@@ -35,7 +36,8 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
     TextView food_name, food_price, food_description;
     ImageView food_image;
     CollapsingToolbarLayout collapsingToolbarLayout;
-    FloatingActionButton btnCart, btnRating;
+    FloatingActionButton btnRating;
+    CounterFab btnCart;
     ElegantNumberButton numberButton;
     RatingBar ratingBar;
 
@@ -58,10 +60,10 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         ratingTbl = database.getReference("Rating");
 
         //init view
-        numberButton = (ElegantNumberButton) findViewById(R.id.number_button);
-        btnCart = (FloatingActionButton) findViewById(R.id.btnCart);
-        btnRating = (FloatingActionButton) findViewById(R.id.btn_rating);
-        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        numberButton = findViewById(R.id.number_button);
+        btnCart = findViewById(R.id.btnCart);
+        btnRating = findViewById(R.id.btn_rating);
+        ratingBar = findViewById(R.id.ratingBar);
 
         btnRating.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,10 +83,12 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
 
         });
 
-        food_description = (TextView) findViewById(R.id.food_description);
-        food_name = (TextView) findViewById(R.id.food_name);
-        food_price = (TextView) findViewById(R.id.food_price);
-        food_image = (ImageView) findViewById(R.id.img_food);
+        btnCart.setCount(new Database(this).getCountCart());
+
+        food_description = findViewById(R.id.food_description);
+        food_name = findViewById(R.id.food_name);
+        food_price = findViewById(R.id.food_price);
+        food_image = findViewById(R.id.img_food);
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppbar);

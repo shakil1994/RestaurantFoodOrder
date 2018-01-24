@@ -25,7 +25,9 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andremion.counterfab.CounterFab;
 import com.example.shakil.restaurantfoodorder.Common.Common;
+import com.example.shakil.restaurantfoodorder.Database.Database;
 import com.example.shakil.restaurantfoodorder.Interface.ItemClickListener;
 import com.example.shakil.restaurantfoodorder.Model.Category;
 import com.example.shakil.restaurantfoodorder.Model.Token;
@@ -62,6 +64,7 @@ public class Home extends AppCompatActivity
     FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
 
     SwipeRefreshLayout swipeRefreshLayout;
+    CounterFab fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +148,7 @@ public class Home extends AppCompatActivity
 
         Paper.init(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -153,6 +156,7 @@ public class Home extends AppCompatActivity
                 startActivity(cartIntent);
             }
         });
+        fab.setCount(new Database(this).getCountCart());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -180,6 +184,15 @@ public class Home extends AppCompatActivity
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fab.setCount(new Database(this).getCountCart());
+        if (adapter != null){
+            adapter.startListening();
+        }
     }
 
     private void updateToken(String token) {
@@ -210,7 +223,7 @@ public class Home extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
