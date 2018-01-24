@@ -20,6 +20,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -109,52 +111,6 @@ public class Home extends AppCompatActivity
         database = FirebaseDatabase.getInstance();
         category = database.getReference("Category");
 
-        Paper.init(this);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent cartIntent = new Intent(Home.this, Cart.class);
-                startActivity(cartIntent);
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        //Set Name for user
-        View headerView = navigationView.getHeaderView(0);
-        txtFullName = (TextView)headerView.findViewById(R.id.txtFullName);
-        txtFullName.setText(Common.currentUser.getName());
-
-        //load menu
-        recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
-        /*recycler_menu.setHasFixedSize(true);*/
-        layoutManager = new LinearLayoutManager(this);
-        recycler_menu.setLayoutManager(layoutManager);
-
-
-
-        updateToken(FirebaseInstanceId.getInstance().getToken());
-
-    }
-
-    private void updateToken(String token) {
-        FirebaseDatabase db =FirebaseDatabase.getInstance();
-        DatabaseReference tokens = db.getReference("Tokens");
-        Token data = new Token(token, false); //false because this token send from client app
-        tokens.child(Common.currentUser.getPhone()).setValue(data);
-    }
-
-    private void loadMenu() {
-
         FirebaseRecyclerOptions<Category> options = new FirebaseRecyclerOptions.Builder<Category>().setQuery(category, Category.class).build();
 
         adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
@@ -186,9 +142,64 @@ public class Home extends AppCompatActivity
                 return new MenuViewHolder(itemView);
             }
         };
+
+        Paper.init(this);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent cartIntent = new Intent(Home.this, Cart.class);
+                startActivity(cartIntent);
+            }
+        });
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        //Set Name for user
+        View headerView = navigationView.getHeaderView(0);
+        txtFullName = (TextView)headerView.findViewById(R.id.txtFullName);
+        txtFullName.setText(Common.currentUser.getName());
+
+        //load menu
+        recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
+        /*recycler_menu.setHasFixedSize(true);*/
+        layoutManager = new LinearLayoutManager(this);
+        recycler_menu.setLayoutManager(layoutManager);
+
+        //for animation
+        LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(recycler_menu.getContext(),R.anim.layout_fall_down);
+        recycler_menu.setLayoutAnimation(controller);
+
+        updateToken(FirebaseInstanceId.getInstance().getToken());
+
+    }
+
+    private void updateToken(String token) {
+        FirebaseDatabase db =FirebaseDatabase.getInstance();
+        DatabaseReference tokens = db.getReference("Tokens");
+        Token data = new Token(token, false); //false because this token send from client app
+        tokens.child(Common.currentUser.getPhone()).setValue(data);
+    }
+
+    private void loadMenu() {
+
+
+
         adapter.startListening();
         recycler_menu.setAdapter(adapter);
         swipeRefreshLayout.setRefreshing(false);
+
+        //animation
+        recycler_menu.getAdapter().notifyDataSetChanged();
+        recycler_menu.scheduleLayoutAnimation();
     }
 
     @Override
