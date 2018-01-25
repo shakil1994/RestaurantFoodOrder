@@ -139,9 +139,7 @@
                         app:textSize="8sp"
                         app:backGroundColor="@color/colorAccent"
                         app:initialNumber="1"
-                        app:finalNumber="20">
-
-                    </com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
+                        app:finalNumber="20" />
 
                 </LinearLayout>
 

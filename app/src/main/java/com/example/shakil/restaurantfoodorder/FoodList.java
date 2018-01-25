@@ -27,7 +27,6 @@ import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -230,23 +229,24 @@ public class FoodList extends AppCompatActivity {
 
     }
 
-    @Override
+    /*@Override
     protected void onResume() {
         super.onResume();
         if (adapter != null){
             adapter.startListening();
         }
-    }
+    }*/
 
     private void startSearch(CharSequence text) {
 
-        //Create query by name
+        /*//Create query by name
         Query searchByName = foodList.orderByChild("Name").equalTo(text.toString());
 
         //Create Options with query
-        FirebaseRecyclerOptions<Food> foodOptions = new FirebaseRecyclerOptions.Builder<Food>().setQuery(searchByName, Food.class).build();
+        FirebaseRecyclerOptions<Food> foodOptions = new FirebaseRecyclerOptions.Builder<Food>()
+                .setQuery(searchByName, Food.class).build();*/
 
-        searchAdapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(foodOptions) {
+       /* searchAdapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(foodOptions) {
             @Override
             protected void onBindViewHolder(@NonNull FoodViewHolder viewHolder, int position, @NonNull Food model) {
                 viewHolder.food_name.setText(model.getName());
@@ -270,7 +270,29 @@ public class FoodList extends AppCompatActivity {
                 return new FoodViewHolder(itemView);
             }
         };
-        searchAdapter.startListening();
+        searchAdapter.startListening();*/
+
+       searchAdapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(Food.class,
+               R.layout.food_item, FoodViewHolder.class, foodList.orderByChild("Name")
+                .equalTo(text.toString())) {
+           @Override
+           protected void populateViewHolder(FoodViewHolder viewHolder, Food model, int position) {
+               viewHolder.food_name.setText(model.getName());
+               Picasso.with(getBaseContext()).load(model.getImage()).into(viewHolder.food_image);
+
+               final Food local = model;
+               viewHolder.setItemClickListener(new ItemClickListener() {
+                   @Override
+                   public void onClick(View view, int position, boolean isLongClick) {
+                       //Start new Activity
+                       Intent foodDetail = new Intent(FoodList.this, FoodDetail.class);
+                       foodDetail.putExtra("FoodId", searchAdapter.getRef(position).getKey());
+                       startActivity(foodDetail);
+                   }
+               });
+           }
+       };
+
         recyclerView.setAdapter(searchAdapter); //Set adapter for recycler view is search result
     }
 
@@ -293,13 +315,14 @@ public class FoodList extends AppCompatActivity {
 
     private void loadListFood(String categoryId) {
 
-        //Create query by category Id
+        /*//Create query by category Id
         Query searchByName = foodList.orderByChild("menuId").equalTo(categoryId);
 
         //Create Options with query
-        FirebaseRecyclerOptions<Food> foodOptions = new FirebaseRecyclerOptions.Builder<Food>().setQuery(searchByName, Food.class).build();
+        FirebaseRecyclerOptions<Food> foodOptions = new FirebaseRecyclerOptions.Builder<Food>()
+                .setQuery(searchByName, Food.class).build();*/
 
-        adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(foodOptions) {
+        /*adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(foodOptions) {
             @Override
             protected void onBindViewHolder(@NonNull final FoodViewHolder viewHolder, final int position, @NonNull final Food model) {
 
@@ -308,7 +331,7 @@ public class FoodList extends AppCompatActivity {
 
                 Picasso.with(getBaseContext()).load(model.getImage()).into(viewHolder.food_image);
 
-                //Quick Cart
+                *//**//*//**//*//*Quick Cart
                 viewHolder.quick_cart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -317,7 +340,7 @@ public class FoodList extends AppCompatActivity {
 
                         Toast.makeText(FoodList.this, "Added to Cart", Toast.LENGTH_LONG).show();
                     }
-                });
+                });*//**//*
 
 
                 //Add Favorites
@@ -370,16 +393,82 @@ public class FoodList extends AppCompatActivity {
                 return new FoodViewHolder(itemView);
             }
         };
-        adapter.startListening();
+        adapter.startListening();*/
+
+        adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(Food.class, R.layout.food_item, FoodViewHolder.class,
+                foodList.orderByChild("menuId").equalTo(categoryId)){
+
+            @Override
+            protected void populateViewHolder(final FoodViewHolder viewHolder, final Food model, final int position) {
+                viewHolder.food_name.setText(model.getName());
+                viewHolder.food_price.setText(String.format("$ %s", model.getPrice().toString()));
+
+                Picasso.with(getBaseContext()).load(model.getImage()).into(viewHolder.food_image);
+
+                //Quick Cart
+                viewHolder.quick_cart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new Database(getBaseContext()).addToCart(new Order(adapter.getRef(position).getKey(), model.getName(),
+                                "1", model.getPrice(), model.getDiscount()));
+
+                        Toast.makeText(FoodList.this, "Added to Cart", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+                //Add Favorites
+                if (localDB.isFavorite(adapter.getRef(position).getKey())){
+                    viewHolder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
+                }
+
+                //click to share
+                viewHolder.share_image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Picasso.with(getApplicationContext()).load(model.getImage()).into(target);
+                    }
+                });
+
+                //click to change state of Favorites
+                viewHolder.fav_image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!localDB.isFavorite(adapter.getRef(position).getKey())){
+                            localDB.addToFavorites(adapter.getRef(position).getKey());
+                            viewHolder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
+                            Toast.makeText(FoodList.this, ""+model.getName()+" was added to Favorites", Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            localDB.removeFromFavorites(adapter.getRef(position).getKey());
+                            viewHolder.fav_image.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                            Toast.makeText(FoodList.this, ""+model.getName()+" was removed from Favorites", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
+                final Food local = model;
+                viewHolder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        //Start new activity
+                        Intent foodDetail = new Intent(FoodList.this, FoodDetail.class);
+                        //send food id to new activity
+                        foodDetail.putExtra("FoodId", adapter.getRef(position).getKey());
+                        startActivity(foodDetail);
+                    }
+                });
+
+            }
+        };
 
         recyclerView.setAdapter(adapter);
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    @Override
+    /*@Override
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
         searchAdapter.stopListening();
-    }
+    }*/
 }
