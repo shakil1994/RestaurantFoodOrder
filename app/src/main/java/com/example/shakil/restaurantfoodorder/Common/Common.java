@@ -15,6 +15,10 @@ import com.example.shakil.restaurantfoodorder.Remote.RetrofitClient;
 public class Common {
     public static User currentUser;
 
+    //public static String PHONE_TEXT = "userPhone";
+
+    //public static final String INTENT_FOOD_ID = "FoodId";
+
     public static final String DELETE = "Delete";
     public static final String USER_KEY = "User";
     public static final String PWD_KEY = "Password";

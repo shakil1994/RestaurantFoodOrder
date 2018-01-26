@@ -1,5 +1,7 @@
 package com.example.shakil.restaurantfoodorder;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +19,8 @@ import com.example.shakil.restaurantfoodorder.Database.Database;
 import com.example.shakil.restaurantfoodorder.Model.Food;
 import com.example.shakil.restaurantfoodorder.Model.Order;
 import com.example.shakil.restaurantfoodorder.Model.Rating;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +34,8 @@ import com.stepstone.apprating.listener.RatingDialogListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+
+import info.hoang8f.widget.FButton;
 
 public class FoodDetail extends AppCompatActivity implements RatingDialogListener{
 
@@ -46,6 +52,8 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
     FirebaseDatabase database;
     DatabaseReference foods;
     DatabaseReference ratingTbl;
+
+    //FButton btnShowComment;
 
     Food currentFood;
 
@@ -72,11 +80,22 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
             }
         });
 
+        /*btnShowComment = findViewById(R.id.btnShowComment);
+        btnShowComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FoodDetail.this, ShowComment.class);
+                intent.putExtra(Common.INTENT_FOOD_ID, foodId);
+                startActivity(intent);
+            }
+        });*/
+
 
         btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Database(getBaseContext()).addToCart(new Order(foodId, currentFood.getName(), numberButton.getNumber(), currentFood.getPrice(), currentFood.getDiscount()));
+                new Database(getBaseContext()).addToCart(new Order(foodId, currentFood.getName(), numberButton.getNumber(), currentFood.getPrice(),
+                        currentFood.getDiscount(), currentFood.getImage()));
 
                 Toast.makeText(FoodDetail.this, "Added to Cart", Toast.LENGTH_LONG).show();
             }
@@ -185,7 +204,15 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         //get rating and upload to firebase
         final Rating rating = new Rating(Common.currentUser.getPhone(), foodId, String.valueOf(value), comments);
 
-        ratingTbl.child(Common.currentUser.getPhone()).addValueEventListener(new ValueEventListener() {
+        //Fix user can rate multiple times
+        ratingTbl.push().setValue(rating).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(FoodDetail.this, "Thank you for submit rating !!!!!!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        /*ratingTbl.child(Common.currentUser.getPhone()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(Common.currentUser.getPhone()).exists()){
@@ -207,7 +234,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
     }
 
     @Override

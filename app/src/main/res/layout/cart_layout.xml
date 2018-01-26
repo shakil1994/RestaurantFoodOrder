@@ -8,12 +8,16 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_margin="8dp"
         android:layout_gravity="center_vertical"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/cart_image"
+            android:layout_width="70dp"
+            android:layout_height="70dp" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -43,12 +47,6 @@
 
         </LinearLayout>
 
-        <!--<ImageView
-            android:layout_gravity="center_vertical|end"
-            android:layout_marginRight="16dp"
-            android:id="@+id/cart_item_count"
-            android:layout_width="20dp"
-            android:layout_height="20dp" />-->
 
         <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
             android:id="@+id/btn_quantity"

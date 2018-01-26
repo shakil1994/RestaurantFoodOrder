@@ -132,8 +132,8 @@ public class Cart extends AppCompatActivity {
                 sendNotificationOrder(order_number);
 
 
-                /*Toast.makeText(Cart.this, "Thank you, order place", Toast.LENGTH_LONG).show();
-                finish();*/
+                Toast.makeText(Cart.this, "Thank you, for your order", Toast.LENGTH_LONG).show();
+                finish();
                 
             }
         }).setNegativeButton("NO", new DialogInterface.OnClickListener() {

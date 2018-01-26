@@ -152,78 +152,74 @@ public class FoodList extends AppCompatActivity {
                         return;
                     }
                 }
+
+                //Search
+                materialSearchBar = findViewById(R.id.searchBar);
+                materialSearchBar.setHint("Enter your food");
+                loadSuggest(); //Write function to load Suggest from firebase
+
+                materialSearchBar.setCardViewElevation(10);
+
+                materialSearchBar.addTextChangeListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        //When user type their text, we will change suggest list
+
+                        List<String> suggest = new ArrayList<String>();
+
+                        //loop in suggest list
+                        for (String search : suggestList){
+                            if (search.toLowerCase().contains(materialSearchBar.getText().toLowerCase())){
+                                suggest.add(search);
+                            }
+                        }
+                        materialSearchBar.setLastSuggestions(suggest);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+
+                materialSearchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
+                    @Override
+                    public void onSearchStateChanged(boolean enabled) {
+                        //When search Bar is close
+                        //Restore original adapter
+
+                        if (!enabled){
+                            recyclerView.setAdapter(adapter);
+                        }
+                    }
+
+                    @Override
+                    public void onSearchConfirmed(CharSequence text) {
+                        //When search finish
+                        //Show result of search adapter
+
+                        startSearch(text);
+                    }
+
+                    @Override
+                    public void onButtonClicked(int buttonCode) {
+
+                    }
+                });
             }
         });
 
 
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_food);
+        recyclerView = findViewById(R.id.recycler_food);
         /*recyclerView.setHasFixedSize(true);*/
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-
-
-
-        //Search
-        materialSearchBar = (MaterialSearchBar) findViewById(R.id.searchBar);
-        materialSearchBar.setHint("Enter your food");
-        loadSuggest(); //Write function to load Suggest from firebase
-        materialSearchBar.setLastSuggestions(suggestList);
-        materialSearchBar.setCardViewElevation(10);
-
-        materialSearchBar.addTextChangeListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //When user type their text, we will change suggest list
-
-                List<String> suggest = new ArrayList<String>();
-
-                //loop in suggest list
-                for (String search : suggestList){
-                    if (search.toLowerCase().contains(materialSearchBar.getText().toLowerCase())){
-                        suggest.add(search);
-                    }
-                }
-                materialSearchBar.setLastSuggestions(suggest);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        materialSearchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
-            @Override
-            public void onSearchStateChanged(boolean enabled) {
-                //When search Bar is close
-                //Restore original adapter
-
-                if (!enabled){
-                    recyclerView.setAdapter(adapter);
-                }
-            }
-
-            @Override
-            public void onSearchConfirmed(CharSequence text) {
-                //When search finish
-                //Show result of search adapter
-
-                startSearch(text);
-            }
-
-            @Override
-            public void onButtonClicked(int buttonCode) {
-
-            }
-        });
-
-
 
 
 
@@ -273,7 +269,7 @@ public class FoodList extends AppCompatActivity {
         searchAdapter.startListening();*/
 
        searchAdapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(Food.class,
-               R.layout.food_item, FoodViewHolder.class, foodList.orderByChild("Name")
+               R.layout.food_item, FoodViewHolder.class, foodList.orderByChild("name")
                 .equalTo(text.toString())) {
            @Override
            protected void populateViewHolder(FoodViewHolder viewHolder, Food model, int position) {
@@ -304,6 +300,8 @@ public class FoodList extends AppCompatActivity {
                     Food item = postSnapshot.getValue(Food.class);
                     suggestList.add(item.getName()); //Add name of food to suggest list
                 }
+
+                materialSearchBar.setLastSuggestions(suggestList);
             }
 
             @Override
@@ -410,7 +408,7 @@ public class FoodList extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         new Database(getBaseContext()).addToCart(new Order(adapter.getRef(position).getKey(), model.getName(),
-                                "1", model.getPrice(), model.getDiscount()));
+                                "1", model.getPrice(), model.getDiscount(), model.getImage()));
 
                         Toast.makeText(FoodList.this, "Added to Cart", Toast.LENGTH_LONG).show();
                     }

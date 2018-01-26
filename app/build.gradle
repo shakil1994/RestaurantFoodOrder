@@ -45,6 +45,7 @@ dependencies {
     implementation 'io.paperdb:paperdb:2.1'
     implementation 'com.github.rey5137:material:1.2.4'
     implementation 'com.stepstone.apprating:app-rating:2.0.0'
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
 
     /*implementation 'com.google.firebase:firebase-messaging:11.6.2'
     implementation 'com.google.firebase:firebase-core:11.6.2'
@@ -61,8 +62,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     //fixed crash FButton
-    implementation ('com.github.jd-alexander:android-flat-button:v1.1')
+    implementation('com.github.jd-alexander:android-flat-button:v1.1')
     implementation 'com.github.d-max:spots-dialog:0.7@aar'
-    implementation ('com.facebook.android:facebook-share:[4,5)')
+    implementation('com.facebook.android:facebook-share:[4,5)')
 }
 apply plugin: 'com.google.gms.google-services'
