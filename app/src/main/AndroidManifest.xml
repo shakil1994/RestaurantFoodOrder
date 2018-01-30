@@ -18,6 +18,15 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
+        <meta-data android:name="com.facebook.accountkit.ApplicationName"
+            android:value="@string/app_name" />
+
+        <!--<meta-data android:name="com.facebook.accountkit.ClientToken"
+            android:value="@string/account_kit_client_token" />-->
+
+        <!--<activity
+            android:name="com.facebook.accountkit.ui.AccountKitActivity" />-->
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

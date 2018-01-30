@@ -13,5 +13,8 @@
 
     <string name="facebook_app_id">144049536253591</string>
     <string name="facebook_login_protocol_name">fb144049536253591</string>
+    <!--<string name="account_kit_client_token">02a1995531afe2c2a540d8b9407f5650</string>-->
+
+    <!--144049536253591-->
 
 </resources>

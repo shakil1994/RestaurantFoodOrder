@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -315,6 +314,7 @@ public class Home extends AppCompatActivity
         LayoutInflater inflater = LayoutInflater.from(this);
         View layout_pwd = inflater.inflate(R.layout.change_password_layout, null);
 
+        /*final MaterialEditText edtName = layout_pwd.findViewById(R.id.edtName);*/
         final MaterialEditText edtPassword = layout_pwd.findViewById(R.id.edtPassword);
         final MaterialEditText edtNewPassword = layout_pwd.findViewById(R.id.edtNewPassword);
         final MaterialEditText edtRepeatPassword = layout_pwd.findViewById(R.id.edtRepeatPassword);
@@ -330,6 +330,23 @@ public class Home extends AppCompatActivity
                 //for use SpotsDialog, please use AlertDialog from android.app, not from v7 like above AlertDialog
                 final AlertDialog waitingDialog = new SpotsDialog(Home.this);
                 waitingDialog.show();
+
+                /*//Update Name
+                Map<String, Object> update_name = new HashMap<>();
+                update_name.put("name", edtName.getText().toString());*/
+
+                /*FirebaseDatabase.getInstance().getReference("User").child(Common.currentUser.getPhone())
+                        .updateChildren(update_name).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                //Dismiss dialog
+                                waitingDialog.dismiss();
+                                if (task.isSuccessful()){
+                                    Toast.makeText(Home.this, "Name was Updated", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });*/
+
 
                 //check old password
                 if (edtPassword.getText().toString().equals(Common.currentUser.getPassword())){
@@ -363,6 +380,8 @@ public class Home extends AppCompatActivity
                     waitingDialog.dismiss();
                     Toast.makeText(Home.this, "Wrong old password", Toast.LENGTH_SHORT).show();
                 }
+
+
             }
         }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
