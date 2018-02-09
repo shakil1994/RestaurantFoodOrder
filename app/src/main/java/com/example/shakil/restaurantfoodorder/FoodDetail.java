@@ -53,7 +53,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
     DatabaseReference foods;
     DatabaseReference ratingTbl;
 
-    //FButton btnShowComment;
+    FButton btnShowComment;
 
     Food currentFood;
 
@@ -80,7 +80,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
             }
         });
 
-        /*btnShowComment = findViewById(R.id.btnShowComment);
+        btnShowComment = findViewById(R.id.btnShowComment);
         btnShowComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +88,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                 intent.putExtra(Common.INTENT_FOOD_ID, foodId);
                 startActivity(intent);
             }
-        });*/
+        });
 
 
         btnCart.setOnClickListener(new View.OnClickListener() {

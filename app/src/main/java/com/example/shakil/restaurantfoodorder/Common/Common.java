@@ -3,6 +3,7 @@ package com.example.shakil.restaurantfoodorder.Common;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.service.autofill.SaveRequest;
 
 import com.example.shakil.restaurantfoodorder.Model.User;
 import com.example.shakil.restaurantfoodorder.Remote.APIService;
@@ -13,11 +14,13 @@ import com.example.shakil.restaurantfoodorder.Remote.RetrofitClient;
  */
 
 public class Common {
+
+    public static String topicName = "News";
+
     public static User currentUser;
 
-    //public static String PHONE_TEXT = "userPhone";
 
-    //public static final String INTENT_FOOD_ID = "FoodId";
+    public static final String INTENT_FOOD_ID = "FoodId";
 
     public static final String DELETE = "Delete";
     public static final String USER_KEY = "User";

@@ -1,5 +1,6 @@
 package com.example.shakil.restaurantfoodorder;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import com.example.shakil.restaurantfoodorder.Model.Request;
 import com.example.shakil.restaurantfoodorder.ViewHolder.FoodViewHolder;
 import com.example.shakil.restaurantfoodorder.ViewHolder.OrderViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -37,7 +39,7 @@ public class OrderStatus extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         requests = database.getReference("Requests");
 
-        recyclerView = (RecyclerView) findViewById(R.id.listOrders);
+        recyclerView = findViewById(R.id.listOrders);
         /*recyclerView.setHasFixedSize(true);*/
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -54,9 +56,9 @@ public class OrderStatus extends AppCompatActivity {
 
     private void loadOrders(String phone) {
 
-        //Query getOrderByUser = requests.orderByChild("phone").equalTo(phone);
+        Query getOrderByUser = requests.orderByChild("phone").equalTo(phone);
 
-        /*//Create Options with query
+        //Create Options with query
         FirebaseRecyclerOptions<Request> orderOptions = new FirebaseRecyclerOptions.Builder<Request>()
                 .setQuery(getOrderByUser, Request.class).build();
 
@@ -76,9 +78,9 @@ public class OrderStatus extends AppCompatActivity {
                 return new OrderViewHolder(itemView);
             }
         };
-        adapter.startListening();*/
+        adapter.startListening();
 
-        adapter = new FirebaseRecyclerAdapter<Request, OrderViewHolder>(Request.class, R.layout.order_layout,OrderViewHolder.class,
+        /*adapter = new FirebaseRecyclerAdapter<Request, OrderViewHolder>(Request.class, R.layout.order_layout,OrderViewHolder.class,
                 requests.orderByChild("phone").equalTo(phone)) {
             @Override
             protected void populateViewHolder(OrderViewHolder viewHolder, Request model, int position) {
@@ -87,14 +89,14 @@ public class OrderStatus extends AppCompatActivity {
                 viewHolder.txtOrderAddress.setText(model.getAddress());
                 viewHolder.txtOrderPhone.setText(model.getPhone());
             }
-        };
+        };*/
 
         recyclerView.setAdapter(adapter);
     }
 
-    /*@Override
+    @Override
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
-    }*/
+    }
 }

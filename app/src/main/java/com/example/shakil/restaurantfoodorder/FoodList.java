@@ -27,6 +27,7 @@ import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -221,28 +222,26 @@ public class FoodList extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-
-
     }
 
-    /*@Override
+    @Override
     protected void onResume() {
         super.onResume();
         if (adapter != null){
             adapter.startListening();
         }
-    }*/
+    }
 
     private void startSearch(CharSequence text) {
 
-        /*//Create query by name
-        Query searchByName = foodList.orderByChild("Name").equalTo(text.toString());
+        //Create query by name
+        Query searchByName = foodList.orderByChild("name").equalTo(text.toString());
 
         //Create Options with query
         FirebaseRecyclerOptions<Food> foodOptions = new FirebaseRecyclerOptions.Builder<Food>()
-                .setQuery(searchByName, Food.class).build();*/
+                .setQuery(searchByName, Food.class).build();
 
-       /* searchAdapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(foodOptions) {
+        searchAdapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(foodOptions) {
             @Override
             protected void onBindViewHolder(@NonNull FoodViewHolder viewHolder, int position, @NonNull Food model) {
                 viewHolder.food_name.setText(model.getName());
@@ -266,9 +265,9 @@ public class FoodList extends AppCompatActivity {
                 return new FoodViewHolder(itemView);
             }
         };
-        searchAdapter.startListening();*/
+        searchAdapter.startListening();
 
-       searchAdapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(Food.class,
+       /*searchAdapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(Food.class,
                R.layout.food_item, FoodViewHolder.class, foodList.orderByChild("name")
                 .equalTo(text.toString())) {
            @Override
@@ -287,7 +286,7 @@ public class FoodList extends AppCompatActivity {
                    }
                });
            }
-       };
+       };*/
 
         recyclerView.setAdapter(searchAdapter); //Set adapter for recycler view is search result
     }
@@ -313,14 +312,14 @@ public class FoodList extends AppCompatActivity {
 
     private void loadListFood(String categoryId) {
 
-        /*//Create query by category Id
+        //Create query by category Id
         Query searchByName = foodList.orderByChild("menuId").equalTo(categoryId);
 
         //Create Options with query
         FirebaseRecyclerOptions<Food> foodOptions = new FirebaseRecyclerOptions.Builder<Food>()
-                .setQuery(searchByName, Food.class).build();*/
+                .setQuery(searchByName, Food.class).build();
 
-        /*adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(foodOptions) {
+        adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(foodOptions) {
             @Override
             protected void onBindViewHolder(@NonNull final FoodViewHolder viewHolder, final int position, @NonNull final Food model) {
 
@@ -329,16 +328,18 @@ public class FoodList extends AppCompatActivity {
 
                 Picasso.with(getBaseContext()).load(model.getImage()).into(viewHolder.food_image);
 
-                *//**//*//**//*//*Quick Cart
+                //Quick Cart
                 viewHolder.quick_cart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         new Database(getBaseContext()).addToCart(new Order(adapter.getRef(position).getKey(), model.getName(),
-                                "1", model.getPrice(), model.getDiscount()));
+                                "1", model.getPrice(), model.getDiscount(), model.getImage()));
 
                         Toast.makeText(FoodList.this, "Added to Cart", Toast.LENGTH_LONG).show();
                     }
-                });*//**//*
+                });
+
+
 
 
                 //Add Favorites
@@ -391,9 +392,10 @@ public class FoodList extends AppCompatActivity {
                 return new FoodViewHolder(itemView);
             }
         };
-        adapter.startListening();*/
+        adapter.startListening();
 
-        adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(Food.class, R.layout.food_item, FoodViewHolder.class,
+
+        /*adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(Food.class, R.layout.food_item, FoodViewHolder.class,
                 foodList.orderByChild("menuId").equalTo(categoryId)){
 
             @Override
@@ -457,16 +459,19 @@ public class FoodList extends AppCompatActivity {
                 });
 
             }
-        };
+        };*/
 
         recyclerView.setAdapter(adapter);
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    /*@Override
+    @Override
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
-        searchAdapter.stopListening();
-    }*/
+        if (searchAdapter != null){
+            searchAdapter.stopListening();
+        }
+
+    }
 }

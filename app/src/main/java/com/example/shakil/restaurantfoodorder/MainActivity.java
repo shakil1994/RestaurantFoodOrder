@@ -32,8 +32,8 @@ import io.paperdb.Paper;
 
 public class MainActivity extends AppCompatActivity {
 
-    /*private static final int REQUEST_CODE = 2265;*/ /*7171*/
-    //Button btnContinue;
+    //private static final int REQUEST_CODE = 99; /*7171*/
+    /*Button btnContinue;*/
     Button btnSignIn, btnSignUp;
     TextView textSlogan;
 
@@ -45,22 +45,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
-        /*AccountKit.initialize(this);*/
+        //AccountKit.initialize(this);
         setContentView(R.layout.activity_main);
 
         printKeyHash();
 
-        /*//Init Firebase
-        database = FirebaseDatabase.getInstance();
+        //Init Firebase
+        /*database = FirebaseDatabase.getInstance();
         users = database.getReference("User");*/
 
 
-        /*btnContinue = findViewById(R.id.btn_continue);*/
+        //btnContinue = findViewById(R.id.btn_continue);
 
         btnSignIn = (Button) findViewById(R.id.btnSignIn);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
 
-        textSlogan = (TextView) findViewById(R.id.textSlogan);
+        textSlogan = findViewById(R.id.textSlogan);
         Typeface face = Typeface.createFromAsset(getAssets(), "fonts/NABILA.TTF");
         textSlogan.setTypeface(face);
 
@@ -71,8 +71,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startLoginSystem();
-                *//*Intent signIn = new Intent(MainActivity.this, SignIn.class);
-                startActivity(signIn);*//*
+
             }
         });*/
 
@@ -102,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        /*//check session facebook account kit
-        if (AccountKit.getCurrentAccessToken() != null){
+        //check session facebook account kit
+        /*if (AccountKit.getCurrentAccessToken() != null){
             //create dialog
 
             //Show dialog
@@ -148,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     /*private void startLoginSystem() {
         Intent intent = new Intent(MainActivity.this, AccountKitActivity.class);
         AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder = new
-                AccountKitConfiguration.AccountKitConfigurationBuilder(LoginType.PHONE, AccountKitActivity.ResponseType.TOKEN);
+                AccountKitConfiguration.AccountKitConfigurationBuilder(LoginType.PHONE, AccountKitActivity.ResponseType.CODE);
         intent.putExtra(AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION, configurationBuilder.build());
         startActivityForResult(intent, REQUEST_CODE);
     }*/
@@ -267,26 +266,27 @@ public class MainActivity extends AppCompatActivity {
                                                 if (task.isSuccessful()){
                                                     Toast.makeText(MainActivity.this, "User registration successful.", Toast.LENGTH_SHORT).show();
 
-                                                    //Login
-                                                    users.child(userPhone).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                                            User localUser = dataSnapshot.getValue(User.class);
-                                                            Intent homeIntent = new Intent(MainActivity.this, Home.class);
-                                                            Common.currentUser = localUser;
-                                                            startActivity(homeIntent);
-
-                                                            //Dismiss dialog
-                                                            waitingDialog.dismiss();
-                                                            finish();
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(DatabaseError databaseError) {
-
-                                                        }
-                                                    });
                                                 }
+
+                                                //Login
+                                                users.child(userPhone).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                        User localUser = dataSnapshot.getValue(User.class);
+                                                        Intent homeIntent = new Intent(MainActivity.this, Home.class);
+                                                        Common.currentUser = localUser;
+                                                        startActivity(homeIntent);
+
+                                                        //Dismiss dialog
+                                                        waitingDialog.dismiss();
+                                                        finish();
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                    }
+                                                });
                                             }
                                         });
                                     }
