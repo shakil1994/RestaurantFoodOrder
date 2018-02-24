@@ -18,7 +18,7 @@ import com.example.shakil.restaurantfoodorder.R;
 
 public class NotificationHelper extends ContextWrapper {
 
-    private static final String CHANEL_ID = "com.example.shakil.restaurantfoodorder.Shakil";
+    private static final String CHANEL_ID = "com.example.shakil.restaurantfoodorder.FoodApp";
     private static final String CHANEL_NAME = "Food Order";
 
     private NotificationManager manager;
@@ -50,12 +50,13 @@ public class NotificationHelper extends ContextWrapper {
     }
 
     @TargetApi(Build.VERSION_CODES.O)
-    public Notification.Builder getFoodAppChannelNotification(String title, String boyd, PendingIntent contentIntent, Uri soundUri){
+    public Notification.Builder getFoodAppChannelNotification(String title, String body, PendingIntent contentIntent, Uri soundUri){
         return new Notification.Builder(getApplicationContext(), CHANEL_ID)
                 .setContentIntent(contentIntent)
                 .setContentTitle(title)
-                .setContentText(boyd)
+                .setContentText(body)
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setSound(soundUri)
                 .setAutoCancel(false);
     }
 

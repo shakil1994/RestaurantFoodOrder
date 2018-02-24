@@ -10,8 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,13 +71,13 @@ public class Cart extends AppCompatActivity {
         requests = database.getReference("Requests");
 
         //Init
-        recyclerView = (RecyclerView) findViewById(R.id.listCart);
-        /*recyclerView.setHasFixedSize(true);*/
+        recyclerView = findViewById(R.id.listCart);
+        recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        txtTotalPrice = (TextView) findViewById(R.id.total);
-        btnPlace = (FButton) findViewById(R.id.btnPlaceOrder);
+        txtTotalPrice = findViewById(R.id.total);
+        btnPlace = findViewById(R.id.btnPlaceOrder);
 
         btnPlace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,8 +102,8 @@ public class Cart extends AppCompatActivity {
         LayoutInflater inflater = this.getLayoutInflater();
         View order_address_comment = inflater.inflate(R.layout.order_address_comment, null);
 
-        final MaterialEditText edtAddress = (MaterialEditText) order_address_comment.findViewById(R.id.edtAddress);
-        final MaterialEditText edtComment = (MaterialEditText) order_address_comment.findViewById(R.id.edtComment);
+        final MaterialEditText edtAddress = order_address_comment.findViewById(R.id.edtAddress);
+        final MaterialEditText edtComment = order_address_comment.findViewById(R.id.edtComment);
 
         alertDialog.setView(order_address_comment);
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
@@ -155,7 +153,7 @@ public class Cart extends AppCompatActivity {
                     Token serverToken = postSnapshot.getValue(Token.class);
 
                     //create raw payload to send
-                    Notification notification = new Notification("You have new order "+order_number);
+                    Notification notification = new Notification("Food Order","You have new order "+order_number+" order place");
                     Sender content = new Sender(serverToken.getToken(),notification);
 
                     mService.sendNotification(content).enqueue(new Callback<MyResponse>() {

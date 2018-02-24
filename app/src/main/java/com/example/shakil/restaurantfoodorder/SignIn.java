@@ -39,11 +39,11 @@ public class SignIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        edtPhone = (MaterialEditText) findViewById(R.id.edtPhone);
-        edtPassword = (MaterialEditText) findViewById(R.id.edtPassword);
-        btnSignIn = (Button) findViewById(R.id.btnSignIn);
-        ckbRemember = (CheckBox) findViewById(R.id.ckbRemember);
-        txtForgotPwd = (TextView) findViewById(R.id.txtForgotPwd);
+        edtPhone = findViewById(R.id.edtPhone);
+        edtPassword = findViewById(R.id.edtPassword);
+        btnSignIn = findViewById(R.id.btnSignIn);
+        ckbRemember = findViewById(R.id.ckbRemember);
+        txtForgotPwd = findViewById(R.id.txtForgotPwd);
 
         //init paper
         Paper.init(this);
@@ -132,8 +132,8 @@ public class SignIn extends AppCompatActivity {
         builder.setView(forgot_view);
         builder.setIcon(R.drawable.ic_security_black_24dp);
 
-        final MaterialEditText edtPhone = (MaterialEditText) forgot_view.findViewById(R.id.edtPhone);
-        final MaterialEditText edtSecureCode = (MaterialEditText) forgot_view.findViewById(R.id.edtSecureCode);
+        final MaterialEditText edtPhone = forgot_view.findViewById(R.id.edtPhone);
+        final MaterialEditText edtSecureCode = forgot_view.findViewById(R.id.edtSecureCode);
 
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override

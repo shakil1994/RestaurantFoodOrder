@@ -40,7 +40,7 @@ public class OrderStatus extends AppCompatActivity {
         requests = database.getReference("Requests");
 
         recyclerView = findViewById(R.id.listOrders);
-        /*recyclerView.setHasFixedSize(true);*/
+        //recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -74,22 +74,11 @@ public class OrderStatus extends AppCompatActivity {
 
             @Override
             public OrderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_item,parent, false);
+                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_layout,parent, false);
                 return new OrderViewHolder(itemView);
             }
         };
         adapter.startListening();
-
-        /*adapter = new FirebaseRecyclerAdapter<Request, OrderViewHolder>(Request.class, R.layout.order_layout,OrderViewHolder.class,
-                requests.orderByChild("phone").equalTo(phone)) {
-            @Override
-            protected void populateViewHolder(OrderViewHolder viewHolder, Request model, int position) {
-                viewHolder.txtOrderId.setText(adapter.getRef(position).getKey());
-                viewHolder.txtOrderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
-                viewHolder.txtOrderAddress.setText(model.getAddress());
-                viewHolder.txtOrderPhone.setText(model.getPhone());
-            }
-        };*/
 
         recyclerView.setAdapter(adapter);
     }

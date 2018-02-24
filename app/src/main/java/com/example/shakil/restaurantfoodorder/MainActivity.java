@@ -32,33 +32,23 @@ import io.paperdb.Paper;
 
 public class MainActivity extends AppCompatActivity {
 
-    //private static final int REQUEST_CODE = 99; /*7171*/
-    /*Button btnContinue;*/
+
     Button btnSignIn, btnSignUp;
     TextView textSlogan;
 
-    /*FirebaseDatabase database;
-    DatabaseReference users;*/
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
-        //AccountKit.initialize(this);
         setContentView(R.layout.activity_main);
 
         printKeyHash();
 
-        //Init Firebase
-        /*database = FirebaseDatabase.getInstance();
-        users = database.getReference("User");*/
 
-
-        //btnContinue = findViewById(R.id.btn_continue);
-
-        btnSignIn = (Button) findViewById(R.id.btnSignIn);
-        btnSignUp = (Button) findViewById(R.id.btnSignUp);
+        btnSignIn = findViewById(R.id.btnSignIn);
+        btnSignUp = findViewById(R.id.btnSignUp);
 
         textSlogan = findViewById(R.id.textSlogan);
         Typeface face = Typeface.createFromAsset(getAssets(), "fonts/NABILA.TTF");
@@ -66,14 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
         //init paper
         Paper.init(this);
-
-        /*btnContinue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startLoginSystem();
-
-            }
-        });*/
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,56 +83,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        //check session facebook account kit
-        /*if (AccountKit.getCurrentAccessToken() != null){
-            //create dialog
-
-            //Show dialog
-            final AlertDialog waitingDialog = new SpotsDialog(this);
-            waitingDialog.show();
-            waitingDialog.setMessage("Please wait");
-            waitingDialog.setCancelable(false);
-
-            AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
-                @Override
-                public void onSuccess(Account account) {
-                    //Login
-                    users.child(account.getPhoneNumber().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            User localUser = dataSnapshot.getValue(User.class);
-                            Intent homeIntent = new Intent(MainActivity.this, Home.class);
-                            Common.currentUser = localUser;
-                            startActivity(homeIntent);
-
-                            //Dismiss dialog
-                            waitingDialog.dismiss();
-                            finish();
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-
-                @Override
-                public void onError(AccountKitError accountKitError) {
-
-                }
-            });
-
-        }*/
     }
-
-    /*private void startLoginSystem() {
-        Intent intent = new Intent(MainActivity.this, AccountKitActivity.class);
-        AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder = new
-                AccountKitConfiguration.AccountKitConfigurationBuilder(LoginType.PHONE, AccountKitActivity.ResponseType.CODE);
-        intent.putExtra(AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION, configurationBuilder.build());
-        startActivityForResult(intent, REQUEST_CODE);
-    }*/
 
     private void printKeyHash() {
         try {
@@ -220,116 +153,5 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
     }
-
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE){
-            AccountKitLoginResult result = data.getParcelableExtra(AccountKitLoginResult.RESULT_KEY);
-            if (result.getError() != null){
-                Toast.makeText(this, ""+result.getError().getErrorType().getMessage(), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            else if (result.wasCancelled()){
-                Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            else {
-                if (result.getAccessToken() != null){
-                    //Show dialog
-                    final AlertDialog waitingDialog = new SpotsDialog(this);
-                    waitingDialog.show();
-                    waitingDialog.setMessage("Please wait");
-                    waitingDialog.setCancelable(false);
-
-                    //Get current phone
-                    AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
-                        @Override
-                        public void onSuccess(Account account) {
-                            final String userPhone = account.getPhoneNumber().toString();
-
-                            //check if exists on firebase users
-                            users.orderByKey().equalTo(userPhone).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    //if not exists
-                                    if (!dataSnapshot.child(userPhone).exists()){
-                                        // we will create new user and login
-                                        User newUser = new User();
-                                        newUser.setPhone(userPhone);
-                                        newUser.setName("");
-
-                                        //add to firebase
-                                        users.child(userPhone).setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()){
-                                                    Toast.makeText(MainActivity.this, "User registration successful.", Toast.LENGTH_SHORT).show();
-
-                                                }
-
-                                                //Login
-                                                users.child(userPhone).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                                        User localUser = dataSnapshot.getValue(User.class);
-                                                        Intent homeIntent = new Intent(MainActivity.this, Home.class);
-                                                        Common.currentUser = localUser;
-                                                        startActivity(homeIntent);
-
-                                                        //Dismiss dialog
-                                                        waitingDialog.dismiss();
-                                                        finish();
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(DatabaseError databaseError) {
-
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    }
-                                    //if exists
-                                    else {
-                                        //Login
-                                        users.child(userPhone).addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                User localUser = dataSnapshot.getValue(User.class);
-                                                Intent homeIntent = new Intent(MainActivity.this, Home.class);
-                                                Common.currentUser = localUser;
-                                                startActivity(homeIntent);
-
-                                                //Dismiss dialog
-                                                waitingDialog.dismiss();
-                                                finish();
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-
-                                            }
-                                        });
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onError(AccountKitError accountKitError) {
-                            Toast.makeText(MainActivity.this, ""+accountKitError.getErrorType().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                }
-            }
-        }
-    }*/
 
 }

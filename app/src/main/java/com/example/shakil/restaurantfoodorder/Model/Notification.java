@@ -9,12 +9,12 @@ public class Notification {
     public String body;
     public String title;
 
-    public Notification(String s) {
-    }
 
-    public Notification(String body, String title) {
+
+    public Notification(String title, String body) {
         this.body = body;
         this.title = title;
+
     }
 
     public String getBody() {

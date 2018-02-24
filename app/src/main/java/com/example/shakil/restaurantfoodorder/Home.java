@@ -72,7 +72,7 @@ public class Home extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Menu");
         setSupportActionBar(toolbar);
 
@@ -148,32 +148,6 @@ public class Home extends AppCompatActivity
                 return new MenuViewHolder(itemView);
             }
         };
-
-        /*adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(Category.class, R.layout.menu_item,
-                MenuViewHolder.class, category) {
-            @Override
-            protected void populateViewHolder(MenuViewHolder viewHolder, Category model, int position) {
-
-                viewHolder.txtMenuName.setText(model.getName());
-                Picasso.with(getBaseContext()).load(model.getImage()).into(viewHolder.imageView);
-
-                final Category clickItem = model;
-                viewHolder.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onClick(View view, int position, boolean isLongClick) {
-
-                        //Get CategoryId and send to new Activity
-                        Intent foodList = new Intent(Home.this, FoodList.class);
-
-                        //Because CategoryId is Key , so we just get key of this item
-                        foodList.putExtra("CategoryId", adapter.getRef(position).getKey());
-                        startActivity(foodList);
-
-
-                    }
-                });
-            }
-        };*/
 
 
         Paper.init(this);
@@ -269,8 +243,8 @@ public class Home extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.refresh){
-            loadMenu();
+        if (item.getItemId() == R.id.menu_search){
+            startActivity(new Intent(Home.this, SearchActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -366,7 +340,6 @@ public class Home extends AppCompatActivity
         LayoutInflater inflater = LayoutInflater.from(this);
         View layout_pwd = inflater.inflate(R.layout.change_password_layout, null);
 
-        /*final MaterialEditText edtName = layout_pwd.findViewById(R.id.edtName);*/
         final MaterialEditText edtPassword = layout_pwd.findViewById(R.id.edtPassword);
         final MaterialEditText edtNewPassword = layout_pwd.findViewById(R.id.edtNewPassword);
         final MaterialEditText edtRepeatPassword = layout_pwd.findViewById(R.id.edtRepeatPassword);

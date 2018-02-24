@@ -21,11 +21,13 @@
             android:name="com.facebook.accountkit.ApplicationName"
             android:value="@string/app_name" />
 
-            <!--<meta-data android:name="com.facebook.accountkit.ClientToken"
+        <!--
+            <meta-data android:name="com.facebook.accountkit.ClientToken"
             android:value="@string/account_kit_client_token" />
 
             <activity
-            android:name="com.facebook.accountkit.ui.AccountKitActivity" />-->
+            android:name="com.facebook.accountkit.ui.AccountKitActivity" />
+        -->
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -61,7 +63,8 @@
             android:authorities="com.facebook.app.FacebookContentProvider144049536253591"
             android:exported="true" />
 
-        <activity android:name=".ShowComment"></activity>
+        <activity android:name=".ShowComment" />
+        <activity android:name=".SearchActivity"></activity>
     </application>
 
 </manifest>

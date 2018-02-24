@@ -109,7 +109,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         food_price = findViewById(R.id.food_price);
         food_image = findViewById(R.id.img_food);
 
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
+        collapsingToolbarLayout = findViewById(R.id.collapsing);
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppbar);
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppbar);
 
@@ -212,29 +212,6 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
             }
         });
 
-        /*ratingTbl.child(Common.currentUser.getPhone()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(Common.currentUser.getPhone()).exists()){
-
-                    //Remove old value
-                    ratingTbl.child(Common.currentUser.getPhone()).removeValue();
-
-                    //update new value
-                    ratingTbl.child(Common.currentUser.getPhone()).setValue(rating);
-                }
-                else {
-                    //update new value
-                    ratingTbl.child(Common.currentUser.getPhone()).setValue(rating);
-                }
-                Toast.makeText(FoodDetail.this, "Thank you for submit rating !!!!!!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
     }
 
     @Override
