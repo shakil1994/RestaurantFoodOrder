@@ -56,7 +56,7 @@ public class OrderStatus extends AppCompatActivity {
 
     private void loadOrders(String phone) {
 
-        Query getOrderByUser = requests.orderByChild("phone").equalTo(phone);
+        Query getOrderByUser = requests.orderByChild("userPhone").equalTo(phone);
 
         //Create Options with query
         FirebaseRecyclerOptions<Request> orderOptions = new FirebaseRecyclerOptions.Builder<Request>()
