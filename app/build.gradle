@@ -9,8 +9,10 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         /*multiDexEnabled true*/
+
     }
     buildTypes {
         release {
@@ -26,6 +28,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+
     //CounterFAB
     implementation 'com.github.andremion:counterfab:1.0.1'
 
@@ -37,6 +40,7 @@ dependencies {
     implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
 
     //Support library
+    //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:27.+'
     implementation 'com.android.support:mediarouter-v7:27.+'
     implementation 'com.android.support:animated-vector-drawable:27.+'
@@ -56,10 +60,10 @@ dependencies {
     /*implementation 'uk.co.chrisjenx:calligraphy:2.3.0'*/
 
     //Firebase
-    implementation 'com.google.firebase:firebase-messaging:11.6.2'
-    implementation 'com.google.firebase:firebase-core:11.6.2'
-    implementation 'com.google.firebase:firebase-database:11.6.2'
-    implementation 'com.firebaseui:firebase-ui-database:3.1.2'
+    implementation 'com.google.firebase:firebase-messaging:11.8.0'
+    implementation 'com.google.firebase:firebase-core:11.8.0'
+    implementation 'com.google.firebase:firebase-database:11.8.0'
+    implementation 'com.firebaseui:firebase-ui-database:3.2.2'
 
     /*implementation 'com.google.firebase:firebase-messaging:10.2.0'
     implementation 'com.google.firebase:firebase-core:10.2.0'
