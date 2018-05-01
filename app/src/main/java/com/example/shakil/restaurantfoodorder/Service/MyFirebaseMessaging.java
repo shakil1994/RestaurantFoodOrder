@@ -12,7 +12,6 @@ import android.support.v4.app.NotificationCompat;
 import com.example.shakil.restaurantfoodorder.Common.Common;
 import com.example.shakil.restaurantfoodorder.Helper.NotificationHelper;
 import com.example.shakil.restaurantfoodorder.MainActivity;
-import com.example.shakil.restaurantfoodorder.Model.Notification;
 import com.example.shakil.restaurantfoodorder.OrderStatus;
 import com.example.shakil.restaurantfoodorder.R;
 import com.google.firebase.messaging.FirebaseMessagingService;

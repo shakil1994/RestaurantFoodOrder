@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.shakil.restaurantfoodorder.Common.Common;
 import com.example.shakil.restaurantfoodorder.Database.Database;
 import com.example.shakil.restaurantfoodorder.Interface.ItemClickListener;
 import com.example.shakil.restaurantfoodorder.Model.Food;
@@ -194,7 +195,7 @@ public class SearchActivity extends AppCompatActivity {
                 viewHolder.quick_cart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new Database(getBaseContext()).addToCart(new Order(adapter.getRef(position).getKey(), model.getName(),
+                        new Database(getBaseContext()).addToCart(new Order(Common.currentUser.getPhone(), adapter.getRef(position).getKey(), model.getName(),
                                 "1", model.getPrice(), model.getDiscount(), model.getImage()));
 
                         Toast.makeText(SearchActivity.this, "Added to Cart", Toast.LENGTH_LONG).show();
@@ -205,7 +206,7 @@ public class SearchActivity extends AppCompatActivity {
 
 
                 //Add Favorites
-                if (localDB.isFavorite(adapter.getRef(position).getKey())){
+                if (localDB.isFavorite(adapter.getRef(position).getKey(),Common.currentUser.getPhone())){
                     viewHolder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
                 }
 
@@ -221,13 +222,13 @@ public class SearchActivity extends AppCompatActivity {
                 viewHolder.fav_image.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!localDB.isFavorite(adapter.getRef(position).getKey())){
-                            localDB.addToFavorites(adapter.getRef(position).getKey());
+                        if (!localDB.isFavorite(adapter.getRef(position).getKey(),Common.currentUser.getPhone())){
+                            localDB.addToFavorites(adapter.getRef(position).getKey(),Common.currentUser.getPhone());
                             viewHolder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
                             Toast.makeText(SearchActivity.this, ""+model.getName()+" was added to Favorites", Toast.LENGTH_LONG).show();
                         }
                         else {
-                            localDB.removeFromFavorites(adapter.getRef(position).getKey());
+                            localDB.removeFromFavorites(adapter.getRef(position).getKey(),Common.currentUser.getPhone());
                             viewHolder.fav_image.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                             Toast.makeText(SearchActivity.this, ""+model.getName()+" was removed from Favorites", Toast.LENGTH_LONG).show();
                         }

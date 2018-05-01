@@ -1,19 +1,17 @@
 package com.example.shakil.restaurantfoodorder.Model;
 
 /**
- * Created by shaki on 11/7/2017.
+ * Created by Shakil on 3/5/2018.
  */
 
 public class Notification {
 
-    public String body;
     public String title;
-
-
+    public String body;
 
     public Notification(String title, String body) {
-        this.body = body;
         this.title = title;
+        this.body = body;
 
     }
 

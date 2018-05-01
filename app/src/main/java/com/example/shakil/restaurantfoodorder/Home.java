@@ -160,7 +160,7 @@ public class Home extends AppCompatActivity
                 startActivity(cartIntent);
             }
         });
-        fab.setCount(new Database(this).getCountCart());
+        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -193,7 +193,7 @@ public class Home extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        fab.setCount(new Database(this).getCountCart());
+        fab.setCount(new Database(this).getCountCart(Common.currentUser.getPhone()));
         if (adapter != null){
             adapter.startListening();
         }
@@ -276,8 +276,9 @@ public class Home extends AppCompatActivity
             signIn.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(signIn);
         }
-        else if (id == R.id.nav_change_pwd){
-            showChangePasswordDialog();
+        else if (id == R.id.nav_update_name){
+            //showChangePasswordDialog();
+            showUpdateNameDialog();
         }
 
         else if (id == R.id.nav_setting){
@@ -332,22 +333,22 @@ public class Home extends AppCompatActivity
 
     }
 
-    private void showChangePasswordDialog() {
+    private void showUpdateNameDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
-        alertDialog.setTitle("CHANGE PASSWORD");
+        alertDialog.setTitle("UPDATE NAME");
         alertDialog.setMessage("Please fill all information");
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        View layout_pwd = inflater.inflate(R.layout.change_password_layout, null);
+        View layout_name = inflater.inflate(R.layout.update_name_layout, null);
 
-        final MaterialEditText edtPassword = layout_pwd.findViewById(R.id.edtPassword);
-        final MaterialEditText edtNewPassword = layout_pwd.findViewById(R.id.edtNewPassword);
-        final MaterialEditText edtRepeatPassword = layout_pwd.findViewById(R.id.edtRepeatPassword);
+        final MaterialEditText edtName = layout_name.findViewById(R.id.edtName);
+        /*final MaterialEditText edtNewPassword = layout_pwd.findViewById(R.id.edtNewPassword);
+        final MaterialEditText edtRepeatPassword = layout_pwd.findViewById(R.id.edtRepeatPassword);*/
 
-        alertDialog.setView(layout_pwd);
+        alertDialog.setView(layout_name);
 
         //Button
-        alertDialog.setPositiveButton("CHANGE", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("UPDATE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //change password here
@@ -356,10 +357,27 @@ public class Home extends AppCompatActivity
                 final AlertDialog waitingDialog = new SpotsDialog(Home.this);
                 waitingDialog.show();
 
+                //Update Name
+                Map<String, Object> update_name = new HashMap<>();
+                update_name.put("name", edtName.getText().toString());
+
+                FirebaseDatabase.getInstance().getReference("User")
+                        .child(Common.currentUser.getPhone())
+                        .updateChildren(update_name)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                waitingDialog.dismiss();
+                                if (task.isSuccessful()){
+                                    Toast.makeText(Home.this, "Name updated", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
 
 
                 //check old password
-                if (edtPassword.getText().toString().equals(Common.currentUser.getPassword())){
+                /*if (edtName.getText().toString().equals(Common.currentUser.getPassword())){
                     //check new password and repeat password
                     if (edtNewPassword.getText().toString().equals(edtRepeatPassword.getText().toString())){
                         Map<String, Object> passwordUpdate = new HashMap<>();
@@ -389,7 +407,7 @@ public class Home extends AppCompatActivity
                 else {
                     waitingDialog.dismiss();
                     Toast.makeText(Home.this, "Wrong old password", Toast.LENGTH_SHORT).show();
-                }
+                }*/
 
 
             }

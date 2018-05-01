@@ -12,8 +12,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
         <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edtName"
+            android:hint="Name"
+            android:inputType="text"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="24sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="true"/>
+
+
+        <!--<com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edtPassword"
             android:hint="Password"
             android:inputType="textPassword"
@@ -26,9 +41,9 @@
             app:met_baseColor="@color/colorPrimary"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/colorPrimary"
-            app:met_singleLineEllipsis="true"/>
+            app:met_singleLineEllipsis="true"/>-->
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <!--<com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edtNewPassword"
             android:hint="New Password"
             android:inputType="textPassword"
@@ -56,7 +71,7 @@
             app:met_baseColor="@color/colorPrimary"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/colorPrimary"
-            app:met_singleLineEllipsis="true"/>
+            app:met_singleLineEllipsis="true"/>-->
 
     </LinearLayout>
 

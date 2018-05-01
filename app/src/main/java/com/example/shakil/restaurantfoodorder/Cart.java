@@ -1,20 +1,26 @@
 package com.example.shakil.restaurantfoodorder;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shakil.restaurantfoodorder.Common.Common;
 import com.example.shakil.restaurantfoodorder.Database.Database;
+import com.example.shakil.restaurantfoodorder.Helper.RecyclerItemTouchHelper;
+import com.example.shakil.restaurantfoodorder.Interface.RecyclerItemTouchHelperListener;
 import com.example.shakil.restaurantfoodorder.Model.MyResponse;
 import com.example.shakil.restaurantfoodorder.Model.Notification;
 import com.example.shakil.restaurantfoodorder.Model.Order;
@@ -23,6 +29,7 @@ import com.example.shakil.restaurantfoodorder.Model.Sender;
 import com.example.shakil.restaurantfoodorder.Model.Token;
 import com.example.shakil.restaurantfoodorder.Remote.APIService;
 import com.example.shakil.restaurantfoodorder.ViewHolder.CartAdapter;
+import com.example.shakil.restaurantfoodorder.ViewHolder.CartViewHolder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +37,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
+
+import org.xml.sax.SAXNotRecognizedException;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -41,7 +50,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Cart extends AppCompatActivity {
+public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperListener {
 
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
@@ -58,6 +67,8 @@ public class Cart extends AppCompatActivity {
 
     APIService mService;
 
+    RelativeLayout rootLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +76,8 @@ public class Cart extends AppCompatActivity {
 
         //init service
         mService = Common.getFCMService();
+
+        rootLayout = findViewById(R.id.rootLayout);
 
         //Firebase
         database = FirebaseDatabase.getInstance();
@@ -75,6 +88,11 @@ public class Cart extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+        //Swipe to delete
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+
 
         txtTotalPrice = findViewById(R.id.total);
         btnPlace = findViewById(R.id.btnPlaceOrder);
@@ -126,7 +144,7 @@ public class Cart extends AppCompatActivity {
                 requests.child(order_number).setValue(request);
 
                 //Delete cart
-                new Database(getBaseContext()).cleanCart();
+                new Database(getBaseContext()).cleanCart(Common.currentUser.getPhone());
                 sendNotificationOrder(order_number);
 
 
@@ -192,7 +210,7 @@ public class Cart extends AppCompatActivity {
     }
 
     private void loadListFood() {
-        cart = new Database(this).getCarts();
+        cart = new Database(this).getCarts(Common.currentUser.getPhone());
         adapter = new CartAdapter(cart, this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
@@ -222,12 +240,61 @@ public class Cart extends AppCompatActivity {
         //we will remove item at list<order> by position
         cart.remove(position);
         // after that, we will delete all old data from SQLite
-        new Database(this).cleanCart();
+        new Database(this).cleanCart(Common.currentUser.getPhone());
         //and final, we will update new data from list<order> to SQLite
         for (Order item:cart){
             new Database(this).addToCart(item);
         }
         //refresh
         loadListFood();
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof CartViewHolder){
+            String name = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition()).getProductName();
+
+            final Order deleteItem = ((CartAdapter) recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition());
+            final int deleteIndex = viewHolder.getAdapterPosition();
+
+            adapter.removeItem(deleteIndex);
+            new Database(getBaseContext()).removeFromCart(deleteItem.getProductId(), Common.currentUser.getPhone());
+
+            //Update TextTotal
+            //Calculate total price
+            int total = 0;
+            List<Order> orders = new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
+            for (Order item : orders){
+                total += (Integer.parseInt(item.getPrice()))*(Integer.parseInt(item.getQuantity()));
+            }
+            Locale locale = new Locale("en", "US");
+            NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
+
+            txtTotalPrice.setText(fmt.format(total));
+
+            //Make Snackbar
+            Snackbar snackbar = Snackbar.make(rootLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
+            snackbar.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    adapter.restoreItem(deleteItem, deleteIndex);
+                    new Database(getBaseContext()).addToCart(deleteItem);
+
+                    //Update TextTotal
+                    //Calculate total price
+                    int total = 0;
+                    List<Order> orders = new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
+                    for (Order item : orders){
+                        total += (Integer.parseInt(item.getPrice()))*(Integer.parseInt(item.getQuantity()));
+                    }
+                    Locale locale = new Locale("en", "US");
+                    NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
+
+                    txtTotalPrice.setText(fmt.format(total));
+                }
+            });
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.show();
+        }
     }
 }

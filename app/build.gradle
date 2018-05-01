@@ -6,12 +6,12 @@ android {
     defaultConfig {
         applicationId "com.example.shakil.restaurantfoodorder"
         minSdkVersion 22
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        /*multiDexEnabled true*/
+        multiDexEnabled true
 
     }
     buildTypes {
@@ -79,8 +79,9 @@ dependencies {
     implementation 'com.github.d-max:spots-dialog:0.7@aar'
 
     //Facebook account kit
-    /*implementation 'com.facebook.android:account-kit-sdk:4.29.0'
-    implementation('com.facebook.android:facebook-share:4.29.0')*/
-    implementation('com.facebook.android:facebook-share:[4,5)')
+    implementation 'com.facebook.android:account-kit-sdk:4.32.0'
+    implementation('com.facebook.android:facebook-share:4.32.0')
+    //implementation('com.facebook.android:facebook-share:[4,5)')
+    /*implementation 'com.facebook.android:facebook-share:4.31.0'*/
 }
 apply plugin: 'com.google.gms.google-services'

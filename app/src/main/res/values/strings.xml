@@ -11,9 +11,9 @@
 
     <string name="forgot_pwd"><u>Forgot Password</u></string>
 
-    <string name="facebook_app_id">144049536253591</string>
-    <string name="facebook_login_protocol_name">fb144049536253591</string>
-    <!--<string name="account_kit_client_token">02a1995531afe2c2a540d8b9407f5650</string>-->
+    <string name="facebook_app_id">442299926221661</string>
+    <string name="facebook_login_protocol_name">fb442299926221661</string>
+    <string name="account_kit_client_token">03cf859327927b18cd0b3d069854ce89</string>
 
     <!--144049536253591-->
 
